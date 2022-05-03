@@ -46,6 +46,10 @@ public class CameraManager : MonoBehaviour
             _cameraFocusDurations.Enqueue(duration);
         }
 
+        /// <summary>
+        /// Calls <see cref="LookAt(Transform)"/> on the next transform in queue
+        /// </summary>
+        /// <returns>The duration before performing next focus</returns>
         public float GetNext()
         {
             if (_transformsToFollow.Count < 1)
@@ -64,36 +68,41 @@ public class CameraManager : MonoBehaviour
     public static CameraControlQueue CamerasQueue;
 
     private bool _processQueue = false;
-    private float _timer;
-    private float _currentTimeLimit;
+    private float _queueTimer;
+    private float _currentQueueTimeLimit;
 
     public static void ReadQueue()
     {
         if (_instance._processQueue)
             return;
         _instance._processQueue = true;
+        //Change transition style to avoid unwanted camera rotations
         Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Style = CinemachineBlendDefinition.Style.Cut;
-        _instance._currentTimeLimit = CamerasQueue.GetNext();
+        _instance._currentQueueTimeLimit = CamerasQueue.GetNext();
     }
 
     public static void SkipQueue()
     {
         CamerasQueue.Clear();
-        _instance._currentTimeLimit = 0f;
+        _instance._currentQueueTimeLimit = 0f;
     }
 
     #endregion
-
+    /// <summary>
+    /// Fill the cameras dictionary with appropriate transforms
+    /// </summary>
     public static void Init(Transform[] players, Transform ball)
     {
         for (int i = 0; i < players.Length + 1; i++)
         {
-            Transform t = i < players.Length ? players[i].transform : ball.transform;
+            Transform t = i < players.Length ? players[i] : ball;
 
+            //Top-view camera
             CinemachineVirtualCamera virtualCamTop =
                 Instantiate(PrefabManager.VirtualCameraTop, _instance.transform).GetComponent<CinemachineVirtualCamera>();
             virtualCamTop.Follow = t;
 
+            //Close-view camera
             CinemachineVirtualCamera virtualCamOrbital =
                 Instantiate(PrefabManager.VirtualCameraOrbital, _instance.transform).GetComponent<CinemachineVirtualCamera>();
             virtualCamOrbital.Follow = virtualCamOrbital.LookAt = t;
@@ -107,14 +116,18 @@ public class CameraManager : MonoBehaviour
     }
 
     #region Choose Camera
-
+    /// <summary>
+    /// Set as active the top-view camera following the given transform
+    /// </summary>
     public static void Follow(Transform toFollow)
     {
         _instance._currentTopCamera = _instance._virtualCameras[toFollow][0];
         if (!_instance._processQueue)
             _instance._currentTopCamera.MoveToTopOfPrioritySubqueue();
     }
-
+    /// <summary>
+    /// Set as active the close-view camera following the given transform
+    /// </summary>
     public static void LookAt(Transform toLookAt)
     {
         _instance._virtualCameras[toLookAt][1].MoveToTopOfPrioritySubqueue();
@@ -132,11 +145,8 @@ public class CameraManager : MonoBehaviour
     private void Update()
     {
         Vector3 activeFollowPosition = ActiveCam?.GetComponent<CameraController>().ToFollow.position ?? Vector3.zero;
-
         float x = Mathf.Max(_lockerLeft.position.x, Mathf.Min(activeFollowPosition.x, _lockerRight.position.x));
-
         float z = Mathf.Max(_lockerDown.position.z, activeFollowPosition.z);
-
         _lockerDynamic.position = new Vector3(x, activeFollowPosition.y, z);
 
         if (_processQueue)
@@ -145,16 +155,16 @@ public class CameraManager : MonoBehaviour
         #region Local functions
         void UpdateQueue()
         {
-            if ((_timer += Time.deltaTime) > _currentTimeLimit)
+            if ((_queueTimer += Time.deltaTime) > _currentQueueTimeLimit)
             {
-                _timer = 0f;
-                if (_currentTimeLimit == 0f)
+                _queueTimer = 0f;
+                if (_currentQueueTimeLimit == 0f)
                 {
                     EndQueueProcess();
                 }
                 else
                 {
-                    _currentTimeLimit = CamerasQueue.GetNext();
+                    _currentQueueTimeLimit = CamerasQueue.GetNext();
                 }
             }
 

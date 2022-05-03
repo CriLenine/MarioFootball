@@ -13,6 +13,7 @@ public class Team : MonoBehaviour
     private string _agoalBrainType;
     public Type GoalBrainType => Type.GetType(_agoalBrainType);
 
+    [SerializeField] private float _itemEarnDelay = 15f;
     public Player[] Players { get; private set; }
     public PlayerBrain[] Brains { get; private set; }
     public Player Goalkeeper { get; private set; }
@@ -28,6 +29,7 @@ public class Team : MonoBehaviour
     private float _lastChange;
     private Player[] _sortedPlayers;
     private bool _hadBallAtChange;
+    private float _itemTimer = 0f;
 
     #region Awake/Update
 
@@ -40,6 +42,12 @@ public class Team : MonoBehaviour
     {
         if (Field.Team2 == this)
             return;
+
+        if ((_itemTimer += Time.deltaTime) > _itemEarnDelay)
+        {
+            _itemTimer -= _itemEarnDelay;
+            GainItem();
+        }
 
         Player piloted = null;
         Player hasBall = null;

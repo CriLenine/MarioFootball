@@ -15,7 +15,10 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        //The field _follow is set only one time with the first Follow transform linked to the virtual camera
         _follow ??= _vCam.Follow;
+
+        //if this is the active camera
         if (_vCam == CameraManager.ActiveCam?.GetComponent<CinemachineVirtualCamera>())
             _vCam.Follow = CameraManager.LockerDynamic;
     }

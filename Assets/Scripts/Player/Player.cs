@@ -114,7 +114,12 @@ public class Player : MonoBehaviour
             _durations.Enqueue(duration);
             _playWhileMovingBools.Enqueue(playWhileMoving);
         }
-
+        /// <summary>
+        /// Calls <see cref="SetNavDriven(Vector3, float)"/> with the next position to reach and the corresponding move speed,
+        /// and triggers the animation if needed
+        /// </summary>
+        /// <param name="player">The player to control</param>
+        /// <returns>The animation to perform once destination is reached and the duration before changing action</returns>
         public (System.Action, float) GetNext(Player player)
         {
             if (_positions.Count < 1)
@@ -129,7 +134,9 @@ public class Player : MonoBehaviour
             }
             return (anim, _durations.Dequeue());
         }
-
+        /// <summary>
+        /// Similar to <see cref="GetNext(Player)"/>, but skipping directly to the last action
+        /// </summary>
         public (System.Action, float) GetLast(Player player)
         {
             if (_positions.Count < 1)
@@ -151,13 +158,13 @@ public class Player : MonoBehaviour
     public PlayerActionsQueue ActionsQueue;
     private bool _processQueue = false;
 
-    private float _timer;
-    private float _currentTimeLimit;
+    private float _queueTimer;
+    private float _currentQueueTimeLimit;
     private System.Action _animToPerform;
 
     public void SkipQueue()
     {
-        (_animToPerform, _currentTimeLimit) = ActionsQueue.GetLast(this);
+        (_animToPerform, _currentQueueTimeLimit) = ActionsQueue.GetLast(this);
         transform.position = ActionsQueue.LastDestination;
     }
 
@@ -166,7 +173,7 @@ public class Player : MonoBehaviour
         if (_processQueue)
             return;
         _processQueue = true;
-        (_animToPerform, _currentTimeLimit) = ActionsQueue.GetNext(this);
+        (_animToPerform, _currentQueueTimeLimit) = ActionsQueue.GetNext(this);
     }
 
     #endregion
@@ -297,11 +304,11 @@ public class Player : MonoBehaviour
 
         void UpdateNavQueue()
         {
-            if ((_timer += Time.deltaTime) > _currentTimeLimit)
+            if ((_queueTimer += Time.deltaTime) > _currentQueueTimeLimit)
             {
-                _timer = 0f;
-                (_animToPerform, _currentTimeLimit) = ActionsQueue.GetNext(this);
-                if (_currentTimeLimit == 0f)
+                _queueTimer = 0f;
+                (_animToPerform, _currentQueueTimeLimit) = ActionsQueue.GetNext(this);
+                if (_currentQueueTimeLimit == 0f)
                     _processQueue = false;
             }
         }
@@ -338,7 +345,7 @@ public class Player : MonoBehaviour
                 if (_animToPerform != null)
                     _animToPerform();
                 else
-                    _timer += _currentTimeLimit;//force the next animation to come
+                    _queueTimer += _currentQueueTimeLimit;//force the next animation to come
 
             }
         }

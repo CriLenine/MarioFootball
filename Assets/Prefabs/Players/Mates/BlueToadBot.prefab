@@ -198,7 +198,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1287454704221325903}
-  m_LocalRotation: {x: -0.61519563, y: -0.14156461, z: -0.11351542, w: 0.767208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.77, z: 0}
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_Children:
@@ -595,4 +595,3 @@ MonoBehaviour:
   _specs: {fileID: 11400000, guid: aa8b16f128f1eb04a82f8fc6eedb172e, type: 2}
   MaterialElectricity: {fileID: 2100000, guid: 98fd08f6dd93b0d4688d40de5ac8a1cd, type: 2}
   MaterialFreeze: {fileID: 2100000, guid: 9e4953594a6ce23438614852f15a6f23, type: 2}
-  debug: 0

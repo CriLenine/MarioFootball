@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -212,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         IsMatchOver = true;
         ChronoStopped = true;
-        foreach(Team team in Field.Teams)
+        foreach (Team team in Field.Teams)
         {
             foreach (Player player in team.Players)
                 player.IsWaiting = true;
@@ -268,7 +267,7 @@ public class GameManager : MonoBehaviour
                 _instance.MatchOver();
                 return;
             }
-    }
+        }
 
         RedirectPlayers(team.Players, team.Other.Players);
         if (!Field.Team1.Players[0].IsPiloted)

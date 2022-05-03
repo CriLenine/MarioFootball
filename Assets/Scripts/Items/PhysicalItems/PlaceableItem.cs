@@ -22,13 +22,17 @@ public abstract class PlaceableItem : PhysicalItem
             Init();
             _init = true;
         }
+
+        // Artificially apply physics equation of free fall to the item
+
         _direction -= g * Time.deltaTime * Vector3.up;
 
         transform.position += _direction * Time.deltaTime;
 
+        // Stop when item is touching the ground again
         if ((transform.position + _direction * Time.deltaTime).y < transform.localScale.y / 2f)
         {
-            _stop = _stopTimer >= 1f;
+            _stop = _direction.y < 0f;
         }
     }
 }

@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615702633624133717}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.47, z: 0}
+  m_LocalPosition: {x: 0, y: 2.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5745850971665983938}
@@ -567,7 +567,6 @@ MonoBehaviour:
   _specs: {fileID: 11400000, guid: 09ec9647a308e39468c398deb64f3bae, type: 2}
   MaterialElectricity: {fileID: 2100000, guid: 98fd08f6dd93b0d4688d40de5ac8a1cd, type: 2}
   MaterialFreeze: {fileID: 2100000, guid: 9e4953594a6ce23438614852f15a6f23, type: 2}
-  debug: 0
 --- !u!195 &5336064003945336616
 NavMeshAgent:
   m_ObjectHideFlags: 0

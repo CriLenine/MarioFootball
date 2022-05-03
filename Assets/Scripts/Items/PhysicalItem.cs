@@ -30,6 +30,7 @@ public abstract class PhysicalItem : Item
                 DestroyItem();
             else
             {
+                // Artificially make the item rebound on the wall
                 Transform fieldT = Field.Transform;
                 float verticalDistance = Vector3.Project(transform.position - fieldT.position, fieldT.forward).magnitude;
                 float horizontalDistance = Vector3.Project(transform.position - fieldT.position, fieldT.right).magnitude;
