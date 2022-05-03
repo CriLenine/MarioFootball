@@ -4,7 +4,7 @@ We worked on this project for **6 weeks**, as a team of **5 students**.
 
 I strongly participated in the global architecture of the project for the first few days of reflexion.
 
-Besides the little and diverses parts of gameplay script i wrote (mainly on singletons and Player.cs),  
+Besides the little and diverses parts of gameplay script i wrote (mainly on singletons and `Player.cs`),  
 I coded :
  - the chrono class (*Chrono.cs*)
  - the cameras system (*CameraManager.cs*, *CameraController.cs*);
